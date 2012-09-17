@@ -2,7 +2,7 @@
   "author": "Alex Robson <alex@sharplearningcurve.com> (http://sharplearningcurve.com)",
   "name": "anvil.output",
   "description": "An anvil core plugin that pushes complete files to output",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "repository": {
     "type": "git",
     "url": "git://github.com/arobson/anvil.output.git"
@@ -11,9 +11,11 @@
     "node": "~0.8.3"
   },
   "main": "./lib/output.js",
-  "devDependencies": { 
-    "anvil.js": ">=0.8.5",
+  "devDependencies": {
     "should": "~1.1"
+  },
+  "dependencies": {
+    "minimatch": "~0.2.6"
   },
   "optionalDependencies": {},
   "keywords": [ "anvil", "core" ]

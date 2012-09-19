@@ -11,17 +11,16 @@ module.exports = function( _, anvil ) {
 		},
 		clean: function( done ) {
 			var self = this,
-				list = this.getOutputList(),
+				list = _.isArray( anvil.config.output ) ? anvil.config.output : [ anvil.config.output ],
 				base = path.resolve( "./" );
-			anvil.scheduler.parallel( list, function( spec, done ) {
-				anvil.scheduler.parallel( spec.directories, function( directory, done ) {
-					anvil.fs.cleanDirectory( directory, function( err ) {
-						if( err ) {
-							anvil.log.error( "Error cleaning " + directory + " : " + err.stack );
-						}
-						done();
-					} );
-				}, done );
+			anvil.scheduler.parallel( list, function( directory, done ) {
+				anvil.log.event( "cleaning " + directory );
+				anvil.fs.cleanDirectory( directory, function( err ) {
+					if( err ) {
+						anvil.log.error( "Error cleaning " + directory + " : " + err.stack );
+					}
+					done();
+				} );
 			}, done );
 		},
 

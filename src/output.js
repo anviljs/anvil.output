@@ -27,8 +27,7 @@ module.exports = function( _, anvil ) {
 
 		configure: function( config, command, done ) {
 			var self = this,
-				pluginConfig = anvil.config[ this.name ],
-				all = pluginConfig.copy[ "**/*" ],
+				all = self.copy[ "**/*" ],
 				outputList = _.isArray( anvil.config.output ) ? anvil.config.output : [ anvil.config.output ];
 				outputList = _.map( outputList, function( outputPath ) {
 					return path.join( outputPath, "{relative}" );
@@ -36,7 +35,7 @@ module.exports = function( _, anvil ) {
 			if( all ) {
 				all = all.concat( outputList );
 			} else {
-				pluginConfig.copy[ "**/*" ] = outputList;
+				self.config.copy[ "**/*" ] = outputList;
 			}
 			anvil.events.on( "file.deleted", function( change, path, base ) {
 				if( base === anvil.config.source ) {
@@ -84,7 +83,8 @@ module.exports = function( _, anvil ) {
 		},
 
 		getOutputList: function() {
-			return _.map( anvil.config[ this.name ].copy, function( directories, pattern ) {
+			var self = this;
+			return _.map( self.config.copy, function( directories, pattern ) {
 				directories = _.isArray( directories ) ? directories : [ directories ];
 				return { pattern: pattern, directories: directories };
 			} );

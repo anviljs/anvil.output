@@ -12,14 +12,14 @@ This plugin will read the output path or list of output paths. For each path in 
 
 ### Example Source Structure
 
-/src
-  | a.js
-  | b.css
-  | c.html
-  | - subdir
-    | d.js
-    | e.css
-    | f.html
+  /src
+    | a.js
+    | b.css
+    | c.html
+    | - subdir
+      | d.js
+      | e.css
+      | f.html
 
 ### Build File 1
 
@@ -31,14 +31,14 @@ This plugin will read the output path or list of output paths. For each path in 
 
 **output structure**
 
-/lib
-  | a.js
-  | b.css
-  | c.html
-  | - subdir
-    | d.js
-    | e.css
-    | f.html
+  /lib
+    | a.js
+    | b.css
+    | c.html
+    | - subdir
+      | d.js
+      | e.css
+      | f.html
 
 ### Build File 2
 
@@ -50,43 +50,47 @@ This plugin will read the output path or list of output paths. For each path in 
 
 **output structure**
 
-/lib
-  | a.js
-  | b.css
-  | c.html
-  | - subdir
-    | d.js
-    | e.css
-    | f.html
+  /lib
+    | a.js
+    | b.css
+    | c.html
+    | - subdir
+      | d.js
+      | e.css
+      | f.html
 
-/output
-  | a.js
-  | b.css
-  | c.html
-  | - subdir
-    | d.js
-    | e.css
-    | f.html
+  /site
+    | a.js
+    | b.css
+    | c.html
+    | - subdir
+      | d.js
+      | e.css
+      | f.html
 
 ## Additional Copy Control
-You can further control what build files get copied to where using the "anvil.output": { "copy": {} } build option. The copy property is a hash where the key is a minimatch (glob) format of the files to be copied and the value is a path or paths to copy all matched files to.
+You can further control what build files get copied to where using an object to control output.
+
+In the object format, the full property can be a single string or a list of strings for full output behavior as described previously.
+
+The partial property is a hash where the key is a minimatch (glob) format of the files to be copied and the value is a path or paths to copy all matched files to.
 
 ### Example Source Structure
 
-/src
-  | a.js
-  | b.css
-  | c.html
-  | - subdir
-    | d.js
-    | e.css
-    | f.html
+  /src
+    | a.js
+    | b.css
+    | c.html
+    | - subdir
+      | d.js
+      | e.css
+      | f.html
 
 ### Build File 1
 '''
 {
-	"anvil.output": {
-		"copy": {
+	"output": {
+		"parital": {
 			"**/*.js": "js"
 		}
 	}
@@ -95,17 +99,18 @@ You can further control what build files get copied to where using the "anvil.ou
 
 ***output structure***
 
-/js
-  | a.js
-  | b.js
+  /js
+    | a.js
+    | b.js
 
-Note: the files output in the matter are output flat and to not retain the structure they were pulled from.
+Note: the files copied using partial do not retain the structure they were pulled from.
 
 ### Build File 2
 '''
 {
-	"anvil.output": {
-		"copy": {
+	"output": {
+    "full": "lib"
+		"partial": {
 			"**/*.css": "css",
 			"**/*.html": "html"
 		}
@@ -114,10 +119,18 @@ Note: the files output in the matter are output flat and to not retain the struc
 '''
 
 ***output structure***
+  /lib
+    | a.js
+    | b.css
+    | c.html
+    | - subdir
+      | d.js
+      | e.css
+      | f.html
 
-/css
-  | b.css
-  | e.css
-/html
-  | c.html
-  | f.html
+  /css
+    | b.css
+    | e.css
+  /html
+    | c.html
+    | f.html

@@ -5,15 +5,14 @@ module.exports = function( _, anvil ) {
 	return anvil.plugin( {
 		name: "anvil.output",
 		activity: "push",
-		config: {
-			copy: {
-			}
-		},
+		output: {},
+		commander: [
+			[ "--clean", "Cleans all full output directories" ]
+		],
 		clean: function( done ) {
-			var self = this,
-				list = _.isArray( anvil.config.output ) ? anvil.config.output : [ anvil.config.output ],
-				base = path.resolve( "./" );
-			anvil.scheduler.parallel( list, function( directory, done ) {
+			var self = this;
+			anvil.scheduler.parallel( this.output.full, function( directory, done ) {
+				directory = directory.replace( /[{]relative[}]/, "" );
 				anvil.log.event( "cleaning " + directory );
 				anvil.fs.cleanDirectory( directory, function( err ) {
 					if( err ) {
@@ -25,29 +24,25 @@ module.exports = function( _, anvil ) {
 		},
 
 		configure: function( config, command, done ) {
-			var self = this,
-				all = self.copy[ "**/*" ],
-				outputList = _.isArray( anvil.config.output ) ? anvil.config.output : [ anvil.config.output ];
-				outputList = _.map( outputList, function( outputPath ) {
-					return path.join( outputPath, "{relative}" );
+			var self = this;
+			this.normalizeConfig();
+			if( command[ "clean" ] ) {
+				this.clean( function() {
+					anvil.events.raise( "all.stop", 0 );
 				} );
-			if( all ) {
-				all = all.concat( outputList );
 			} else {
-				self.config.copy[ "**/*" ] = outputList;
+				anvil.events.on( "file.deleted", function( change, path, base ) {
+					if( base === anvil.config.source ) {
+						self['delete']( path );
+					}
+				} );
+				done();
 			}
-			anvil.events.on( "file.deleted", function( change, path, base ) {
-				if( base === anvil.config.source ) {
-					self['delete']( path );
-				}
-			} );
-			done();
 		},
 
 		copy: function( done ) {
 			var self = this,
-				list = this.getOutputList(),
-				base = path.resolve( "./" );
+				list = this.getOutputList();
 			anvil.scheduler.parallel( list, function( spec, done ) {
 				var files = self.getFilesForPattern( spec.pattern );
 				anvil.scheduler.parallel( spec.directories, function( directory, done ) {
@@ -82,18 +77,32 @@ module.exports = function( _, anvil ) {
 		},
 
 		getOutputList: function() {
-			var self = this;
-			return _.map( self.config.copy, function( directories, pattern ) {
-				directories = _.isArray( directories ) ? directories : [ directories ];
-				return { pattern: pattern, directories: directories };
+			var partials = _.map( this.output.partial, function( directories, pattern ) {
+					directories = _.isArray( directories ) ? directories : [ directories ];
+					return { pattern: pattern, directories: directories };
+				} );
+			return partials.concat( { pattern: "**/*", directories: this.output.full } );
+		},
+
+		normalizeConfig: function() {
+			var output = anvil.config.output;
+			this.output.partial = {};
+			if( _.isString( output ) ) {
+				this.output.full = [ output ];
+			} else if( _.isArray( output ) ) {
+				this.output.full = output;
+			} else {
+				this.output = _.extend( this.output, output );
+				this.output.full = _.isArray( this.output.full ) ? this.output.full : [ this.output.full ];
+			}
+			this.output.full = _.map( this.output.full, function( fullPath ) {
+				return fullPath.match( /[{]relative[}]/ ) ? fullPath : fullPath + "/{relative}";
 			} );
 		},
 
 		run: function( done ) {
 			var self = this;
-			this.clean( function() {
-				self.copy( done );
-			} );
+			self.copy( done );
 		}
 	} );
 };

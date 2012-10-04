@@ -7,7 +7,7 @@ module.exports = function( _, anvil ) {
 		activity: "push",
 		output: {},
 		commander: [
-			[ "--clean", "Cleans all full output directories" ]
+			[ "--clean", "Cleans all output and working directories" ]
 		],
 		clean: function( done ) {
 			var self = this;
@@ -20,7 +20,11 @@ module.exports = function( _, anvil ) {
 					}
 					done();
 				} );
-			}, done );
+			}, function() {
+				anvil.fs.cleanDirectory( anvil.config.working, function( err ) {
+					done();
+				} );
+			} );
 		},
 
 		configure: function( config, command, done ) {
@@ -28,10 +32,10 @@ module.exports = function( _, anvil ) {
 			this.normalizeConfig();
 			if( command[ "clean" ] ) {
 				this.clean( function() {
-					anvil.events.raise( "all.stop", 0 );
+					anvil.raise( "all.stop", 0 );
 				} );
 			} else {
-				anvil.events.on( "file.deleted", function( change, path, base ) {
+				anvil.on( "file.deleted", function( change, path, base ) {
 					if( base === anvil.config.source ) {
 						self['delete']( path );
 					}

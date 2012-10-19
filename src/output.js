@@ -31,9 +31,7 @@ module.exports = function( _, anvil ) {
 			var self = this;
 			this.normalizeConfig();
 			if( command[ "clean" ] ) {
-				this.clean( function() {
-					anvil.raise( "all.stop", 0 );
-				} );
+				this.clean( done );
 			} else {
 				anvil.on( "file.deleted", function( change, path, base ) {
 					if( base === anvil.config.source ) {

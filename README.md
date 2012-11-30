@@ -12,63 +12,70 @@ This plugin will read the output path or list of output paths. For each path in 
 
 ### Example Source Structure
 
-  /src
-    | a.js
-    | b.css
-    | c.html
-    | - subdir
-      | d.js
-      | e.css
-      | f.html
+```plain
+/src
+  | a.js
+  | b.css
+  | c.html
+  | - subdir
+    | d.js
+    | e.css
+    | f.html
+```
 
 ### Build File 1
 
-'''
+```javascript
 {
 	"output": "lib"
 }
-'''
+```
 
 **output structure**
 
-  /lib
-    | a.js
-    | b.css
-    | c.html
-    | - subdir
-      | d.js
-      | e.css
-      | f.html
+```plain
+/lib
+  | a.js
+  | b.css
+  | c.html
+  | - subdir
+    | d.js
+    | e.css
+    | f.html
+```
 
 ### Build File 2
 
-'''
+```javascript
 {
 	"output": [ "lib", "site" ]
 }
-'''
+```
 
 **output structure**
 
-  /lib
-    | a.js
-    | b.css
-    | c.html
-    | - subdir
-      | d.js
-      | e.css
-      | f.html
+```plain
+/lib
+  | a.js
+  | b.css
+  | c.html
+  | - subdir
+    | d.js
+    | e.css
+    | f.html
 
-  /site
-    | a.js
-    | b.css
-    | c.html
-    | - subdir
-      | d.js
-      | e.css
-      | f.html
+/site
+  | a.js
+  | b.css
+  | c.html
+  | - subdir
+    | d.js
+    | e.css
+    | f.html
+```
 
 ## Additional Copy Control
+
 You can further control what build files get copied to where using an object to control output.
 
 In the object format, the full property can be a single string or a list of strings for full output behavior as described previously.
@@ -77,17 +84,20 @@ The partial property is a hash where the key is a minimatch (glob) format of the
 
 ### Example Source Structure
 
-  /src
-    | a.js
-    | b.css
-    | c.html
-    | - subdir
-      | d.js
-      | e.css
-      | f.html
+```plain
+/src
+  | a.js
+  | b.css
+  | c.html
+  | - subdir
+    | d.js
+    | e.css
+    | f.html
+```
 
 ### Build File 1
-'''
+
+```javascript
 {
 	"output": {
 		"parital": {
@@ -95,18 +105,21 @@ The partial property is a hash where the key is a minimatch (glob) format of the
 		}
 	}
 }
-'''
+```
 
 ***output structure***
 
-  /js
-    | a.js
-    | b.js
+```plain
+/js
+  | a.js
+  | b.js
+```
 
-Note: the files copied using partial do not retain the structure they were pulled from.
+_Note: the files copied using partial do not retain the structure they were pulled from._
 
 ### Build File 2
-'''
+
+```javascript
 {
 	"output": {
     "full": "lib"
@@ -116,21 +129,24 @@ Note: the files copied using partial do not retain the structure they were pulle
 		}
 	}
 }
-'''
+```
 
 ***output structure***
-  /lib
-    | a.js
-    | b.css
-    | c.html
-    | - subdir
-      | d.js
-      | e.css
-      | f.html
 
-  /css
-    | b.css
+```plain
+/lib
+  | a.js
+  | b.css
+  | c.html
+  | - subdir
+    | d.js
     | e.css
-  /html
-    | c.html
     | f.html
+
+/css
+  | b.css
+  | e.css
+/html
+  | c.html
+  | f.html
+```

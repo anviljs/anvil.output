@@ -51,6 +51,7 @@ module.exports = function( _, anvil ) {
 					anvil.scheduler.parallel( files, function( file, written ) {
 						var relativePath = directory.replace( "{relative}", file.relativePath );
 						anvil.log.debug( "copying " + file.name + " to " + relativePath );
+						file.state = "done";
 						anvil.fs.copy( [ file.workingPath, file.name ], [ relativePath, file.name ], written );
 					}, done );
 				}, done );
@@ -87,14 +88,15 @@ module.exports = function( _, anvil ) {
 		},
 
 		normalizeConfig: function() {
-			var output = anvil.config.output;
-			this.output.partial = {};
+			var output = anvil.config.output || {};
+			this.output.partial = output.partial || {};
+			this.output.full = output.full || output;
+
 			if( _.isString( output ) ) {
 				this.output.full = [ output ];
 			} else if( _.isArray( output ) ) {
 				this.output.full = output;
 			} else {
-				this.output = _.extend( this.output, output );
 				this.output.full = _.isArray( this.output.full ) ? this.output.full : [ this.output.full ];
 			}
 			this.output.full = _.map( this.output.full, function( fullPath ) {

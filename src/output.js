@@ -1,8 +1,7 @@
 var path = require( "path" );
-var minimatch = require( "minimatch" );
 
 module.exports = function( _, anvil ) {
-	return anvil.plugin( {
+	anvil.plugin( {
 		name: "anvil.output",
 		activity: "push",
 		output: {},
@@ -75,7 +74,7 @@ module.exports = function( _, anvil ) {
 		getFilesForPattern: function( pattern ) {
 			return _.filter( anvil.project.files, function( file ) {
 				var relativePath = anvil.fs.buildPath( [ file.relativePath, file.name ] );
-				return !file.noCopy && minimatch.match( [ relativePath ], pattern, {} ).length > 0;
+				return !file.noCopy && anvil.fs.match( [ relativePath ], pattern, {} ).length > 0;
 			} );
 		},
 

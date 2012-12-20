@@ -1,8 +1,8 @@
 {
   "author": "Alex Robson <alex@sharplearningcurve.com> (http://sharplearningcurve.com)",
   "name": "anvil.output",
-  "description": "An anvil core extension that pushes complete files to output",
-  "version": "0.1.0",
+  "description": "A core anvil extension that pushes complete files to output",
+  "version": "0.1.1",
   "repository": {
     "type": "git",
     "url": "git://github.com/arobson/anvil.output.git"
@@ -13,9 +13,6 @@
   "main": "./lib/output.js",
   "devDependencies": {
     "should": "~1.1"
-  },
-  "dependencies": {
-    "minimatch": "~0.2.6"
   },
   "optionalDependencies": {},
   "keywords": [ "anvil", "core" ]

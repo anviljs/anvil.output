@@ -1,14 +1,14 @@
-## Anvil Output Plugin
+## Anvil Output Extension
 
-This plugin is a core component of anvil and is required to function as expected.
+A core component of anvil required to function as expected.
 
 ## Installation
 
-anvil will install this plugin during post-install.
+anvil will install this extension during post-install.
 
 ## Normal Output
 
-This plugin will read the output path or list of output paths. For each path in the output path, all output will be copied relative to their source path structure.
+This extension will read the output path or list of output paths. For each path in the output path, all output will be copied relative to their source path structure.
 
 ### Example Source Structure
 

@@ -32,7 +32,10 @@ module.exports = function( _, anvil ) {
 			if( command[ "clean" ] ) {
 				this.clean( done );
 			} else {
-				anvil.on( "file.deleted", function( change, path, base ) {
+				anvil.on( "file.deleted", function( args ) {
+					var change = args.change,
+						path = args.path,
+						base = args.base;
 					if( base === anvil.config.source ) {
 						self['delete']( path );
 					}
